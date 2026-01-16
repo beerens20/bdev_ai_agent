@@ -1,4 +1,5 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from google import genai
 
@@ -6,12 +7,16 @@ load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 
+parser = argparse.ArgumentParser(description="Chatbot")
+parser.add_argument("user_prompt", type=str, help="Enter question")
+args = parser.parse_args()
+
 if api_key == None:
     raise RuntimeError("API Key not found or loaded")
 
 response = client.models.generate_content(
     model="gemini-2.5-flash",
-    contents="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
+    contents=args.user_prompt,
 )
 # print(
 #     f"Prompt tokens: {response.prompt_token_count}\nResponse tokens: {response.candidates_token_count}"
